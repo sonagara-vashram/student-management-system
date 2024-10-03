@@ -80,3 +80,15 @@ class CourseRequest(BaseModel):
                 "description": "Introduction to mathematics"
             }
         }
+        
+class EnrollmentRequest(BaseModel):
+    student_id_: UUID
+    course_id_: UUID
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "student_id_": "d4a1a0b1-114c-4268-9e67-091af22dbc16", 
+                "course_id_": "d4a1a0b1-114c-4268-9e67-091af22dbc16", 
+            }
+        }
