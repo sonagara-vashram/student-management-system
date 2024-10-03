@@ -92,3 +92,41 @@ class EnrollmentRequest(BaseModel):
                 "course_id_": "d4a1a0b1-114c-4268-9e67-091af22dbc16", 
             }
         }
+        
+#! pending..!
+class AttendanceRequest(BaseModel):
+    student_id_: UUID
+    class_id_: UUID
+    date: datetime = Field(default_factory=date.today, description="Date of attendance in YYYY-MM-DD format")
+    status: str = Field(min_length=2, max_length=10, description="Status must be between 2 and 10 characters")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "student_id_": "d4a1a0b1-114c-4268-9e67-091af22dbc16", 
+                "class_id_": "d4a1a0b1-114c-4268-9e67-091af22dbc16", 
+                "date": "2001-02-15", 
+                "status": "present", 
+            }
+        }
+        
+#! pending..!
+class TeacherRequest(BaseModel):
+    user_id_: UUID
+    first_name: str = Field(min_length=2, max_length=50, description="First name must be between 2 and 50 characters")
+    last_name: str = Field(min_length=2, max_length=50, description="Last name must be between 2 and 50 characters")
+    email: EmailStr = Field(description="Valid email address")
+    phone: str = Field(min_length=10, max_length=15, description="Phone number must be between 10 and 15 characters")
+    department: str = Field(min_length=2, max_length=100, description="Department must be between 2 and 100 characters")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "user_id_": "d4a1a0b1-114c-4268-9e67-091af22dbc16",  # Example UUID
+                "first_name": "John",
+                "last_name": "Doe",
+                "email": "john.doe@example.com",
+                "phone": "1234567890",
+                "department": "Computer"
+            }
+        }
