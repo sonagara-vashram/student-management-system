@@ -68,3 +68,15 @@ class StudentRequest(BaseModel):
                 "address": "123 Main St, Anytown, USA"
             }
         }
+
+class CourseRequest(BaseModel):
+    name: str = Field(min_length=2, max_length=50, description="Name must be between 2 and 50 characters")
+    description: str = Field(min_length=2, max_length=255, description="Description must be between 2 and 255 characters")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "name": "Math",
+                "description": "Introduction to mathematics"
+            }
+        }
