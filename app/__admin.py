@@ -50,14 +50,6 @@ async def update_admin(db: db_dependency, admin_request: AdminRequest, admin_id:
     db.add(admin_model)
     db.commit()
     
-@app.delete("/admin/{admin_id}", status_code=status.HTTP_200_OK)
-async def delete_admin(db: db_dependency, admin_id):
-    admin_model = db.query(Admins).filter(Admins.admins_id == admin_id)
-    if admin_model is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Todo not found.')
-    db.query(Admins).filter(Admins.admins_id == admin_id).delete()
-    db.commit()
-    
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host='127.0.0.1', port=8000)
