@@ -24,14 +24,13 @@ async def read_all(db: db_dependency):
 
 @app.post("/user", status_code=status.HTTP_201_CREATED)
 async def create_user(db: db_dependency, user_request: UserRequest):
-    # Admin ko `integer_id` ke through find karen
     admin = db.query(Admins).filter(Admins.admins_id == user_request.admin_id).first()
     
     if not admin:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid admin ID")
     
     user_model = Users(
-        admin_id_=admin.admins_id,  # Storing the UUID from admin record
+        admin_id_=admin.admins_id,  
         username=user_request.username,
         email=user_request.email,
         hashed_password=user_request.hashed_password,
@@ -61,7 +60,7 @@ async def update_user(db: db_dependency, user_request: UserRequest, user_id: int
     if not admin:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid admin ID")
 
-    user_model.admin_id_ = admin.admins_id  # Update with validated admin ID
+    user_model.admin_id_ = admin.admins_id 
     user_model.username = user_request.username
     user_model.email = user_request.email
     user_model.hashed_password = user_request.hashed_password
@@ -70,6 +69,7 @@ async def update_user(db: db_dependency, user_request: UserRequest, user_id: int
 
     db.add(user_model)
     db.commit()
+    return {'detail': 'user update successfullly.'}
 
 @app.delete("/user/{user_id}", status_code=status.HTTP_200_OK)
 async def delete_user(db: db_dependency, user_id: int = Path(gt=0)):
@@ -79,6 +79,7 @@ async def delete_user(db: db_dependency, user_id: int = Path(gt=0)):
     
     db.delete(user_model)
     db.commit()
+    return {"detail": "User deleted successfully."}
 
 if __name__ == "__main__":
     import uvicorn
