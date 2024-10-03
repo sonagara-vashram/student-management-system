@@ -46,7 +46,7 @@ class UserRequest(BaseModel):
         }
         
 class StudentRequest(BaseModel):
-    user_id_: UUID  # Add user_id field
+    user_id_: UUID  # Add user_id_ field
     first_name: str = Field(min_length=2, max_length=50, description="First name must be between 2 and 50 characters")
     last_name: str = Field(min_length=2, max_length=50, description="Last name must be between 2 and 50 characters")
     dob: date = Field(description="Date of birth in YYYY-MM-DD format")
@@ -58,14 +58,13 @@ class StudentRequest(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
-                "user_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16",  # Example UUID
+                "user_id_": "d4a1a0b1-114c-4268-9e67-091af22dbc16",  # Example UUID
                 "first_name": "John",
                 "last_name": "Doe",
                 "dob": "2000-01-01",
                 "gender": "Male",
                 "email": "john.doe@example.com",
                 "phone": "1234567890",
-                "address": "123 Main St, Anytown, USA",
-                "created_at": "2023-01-01"
+                "address": "123 Main St, Anytown, USA"
             }
         }
