@@ -24,6 +24,8 @@ async def read_all(db: db_dependency):
 @app.post("/student", status_code=status.HTTP_201_CREATED)
 async def create_student(db: db_dependency, std_request: StudentRequest):
     std_model = Students(**std_request.dict())
+    if not std_model:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unexpected error occurred.")
     db.add(std_model)
     db.commit()
     db.refresh(std_model)
