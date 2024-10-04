@@ -1,3 +1,4 @@
+import enum
 from typing import Annotated
 from sqlalchemy.orm import Session
 from fastapi import FastAPI, Depends, HTTPException, Path
@@ -17,6 +18,15 @@ def get_db():
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
+
+def is_valid_role(role: RoleEnum):
+    formatted_role = role.value.lower()     
+    for roles in RoleEnum:
+        if roles.value == formatted_role:
+            return roles.name 
+    
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid role value")
+
 @app.get("/user", operation_id="get_all_users")
 async def read_all(db: db_dependency):
     return db.query(Users).all()
@@ -28,10 +38,8 @@ async def create_user(db: db_dependency, user_request: UserRequest):
     if not admin:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid admin ID")
     
-    # Ensure the role matches the RoleEnum values
     role = user_request.role
-    if role not in RoleEnum._value2member_map_:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid role value")
+    role = is_valid_role(role)
     
     user_model = Users(
         admin_id_=admin.admins_id,  
@@ -40,6 +48,7 @@ async def create_user(db: db_dependency, user_request: UserRequest):
         hashed_password=user_request.hashed_password,
         role=role
     )
+
     db.add(user_model)
     db.commit()
     db.refresh(user_model)

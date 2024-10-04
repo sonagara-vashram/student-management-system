@@ -9,10 +9,10 @@ from database import Base
 
 # Role Enum for User Roles
 class RoleEnum(enum.Enum):
-    ADMIN = "Admin"
-    STUDENT = "Student"
-    TEACHER = "Teacher"
-    PARENT = "Parent" 
+    ADMIN = "admin"
+    STUDENT = "student"
+    TEACHER = "teacher"
+    PARENT = "parent"
 
 # Admin table - Main table to manage other roles
 class Admins(Base):
@@ -34,7 +34,7 @@ class Users(Base):
     username = Column(String(50), unique=True, nullable=False, index=True)
     email = Column(String(100), unique=True, nullable=False, index=True)
     hashed_password = Column(String(255), nullable=False)
-    role = Column(Enum(RoleEnum), nullable=False) 
+    role = Column(Enum(RoleEnum))   
     created_at = Column(DateTime, default=func.now())
     admin_id_ = Column(UUID(as_uuid=True), ForeignKey("admins.admins_id"), nullable=False)  # Every user is managed by an admin
     

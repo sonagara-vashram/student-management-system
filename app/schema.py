@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, Path
 from pydantic import BaseModel, Field, EmailStr
 from starlette import status
+from models import RoleEnum
 from database import SessionLocal
 from datetime import date, datetime
 
@@ -26,16 +27,17 @@ class UserRequest(BaseModel):
     username: str = Field(min_length=3, max_length=50, description="Username must be between 3 and 50 characters")
     email: EmailStr = Field(description="Valid email address")
     hashed_password: str = Field(min_length=8, max_length=255, description="Password must be between 8 and 255 characters")
-    role: str = Field(min_length=3, max_length=20, description="Role must be between 3 and 20 characters")
+    role: RoleEnum = Field(description="Role must be one of the following: 'Admin', 'User', or 'Teacher'")
+
 
     class Config:
         json_schema_extra = {
             "example": {
-                "admin_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16",  
-                "username": "user123",
-                "email": "user@example.com",
-                "hashed_password": "hashedpassword123",
-                "role": "user"
+                "admin_id": "9f2239c3-5218-49b9-9087-d85e0520df9b",
+                "email": "jon@gmail.com",
+                "hashed_password": "jingoes0102",
+                "role": "teacher", 
+                "username": "jon0106"
             }
         }
         
