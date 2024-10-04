@@ -11,8 +11,6 @@ class AdminRequest(BaseModel):
     username: str = Field(min_length=2, max_length=50, description="Username must be between 2 and 50 characters")
     email: EmailStr = Field(description="Valid email address")
     hashed_password: str = Field(min_length=8, max_length=255, description="Password must be between 8 and 255 characters")
-    created_at: date = Field(default_factory=date.today, description="Creation date")
-    updated_at: date = Field(default_factory=date.today, description="Last update date")
 
     class Config:
         json_schema_extra = {
@@ -20,28 +18,24 @@ class AdminRequest(BaseModel):
                 "username": "adminuser",
                 "email": "admin@example.com",
                 "hashed_password": "hashedpassword123",
-                "created_at": "2023-01-01",
-                "updated_at": "2023-01-01"
             }
         }
         
 class UserRequest(BaseModel):
-    admin_id: UUID  # Correct type for UUID
+    admin_id: UUID  
     username: str = Field(min_length=3, max_length=50, description="Username must be between 3 and 50 characters")
     email: EmailStr = Field(description="Valid email address")
     hashed_password: str = Field(min_length=8, max_length=255, description="Password must be between 8 and 255 characters")
     role: str = Field(min_length=3, max_length=20, description="Role must be between 3 and 20 characters")
-    created_at: date = Field(default_factory=date.today, description="Creation date")
 
     class Config:
         json_schema_extra = {
             "example": {
-                "admin_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16",  # Example UUID
+                "admin_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16",  
                 "username": "user123",
                 "email": "user@example.com",
                 "hashed_password": "hashedpassword123",
-                "role": "user",
-                "created_at": "2023-01-01"
+                "role": "user"
             }
         }
         

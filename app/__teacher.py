@@ -52,6 +52,12 @@ async def update_teacher(db: db_dependency, teacher_request: TeacherRequest, tea
     if teacher_model is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Teacher not found.')
 
+    user = db.query(Users).filter(Users.users_id == teacher_request.user_id_).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User not found.")
+    if user.role != 'teacher':
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User is not designated as a teacher.")
+
     teacher_model.user_id_ = teacher_request.user_id_
     teacher_model.first_name = teacher_request.first_name
     teacher_model.last_name = teacher_request.last_name
