@@ -26,12 +26,9 @@ async def create_teacher(db: db_dependency, teacher_request: TeacherRequest):
     user = db.query(Users).filter(Users.users_id == teacher_request.user_id_).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User not found.")
-    
-    # Check if the user is designated as a teacher
     if user.role != 'teacher':
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User is not designated as a teacher.")
     
-    # Check if a teacher with the same email already exists
     existing_teacher = db.query(Teachers).filter(Teachers.email == teacher_request.email).first()
     if existing_teacher:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Teacher with this email already exists.")
