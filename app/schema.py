@@ -27,7 +27,7 @@ class UserRequest(BaseModel):
     username: str = Field(min_length=3, max_length=50, description="Username must be between 3 and 50 characters")
     email: EmailStr = Field(description="Valid email address")
     hashed_password: str = Field(min_length=8, max_length=255, description="Password must be between 8 and 255 characters")
-    role: RoleEnum = Field(description="Role must be one of the following: 'Admin', 'User', or 'Teacher'")
+    role: str = Field(description="Role must be one of the following: 'Admin', 'User', or 'Teacher'")
 
 
     class Config:
