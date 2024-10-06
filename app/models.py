@@ -9,7 +9,6 @@ from database import Base
 
 # Role Enum for User Roles
 class RoleEnum(enum.Enum):
-    ADMIN = "admin"
     STUDENT = "student"
     TEACHER = "teacher"
     PARENT = "parent"
