@@ -80,7 +80,7 @@ class Teachers(Base):
     phone = Column(String(15), nullable=False)
     created_at = Column(DateTime, default=func.now(), index=True)
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now(), index=True)
-
+    
     user = relationship('Users', back_populates='teacher')
     classes = relationship('Classes', back_populates='teacher')
     assignments = relationship('Assignments', back_populates='teacher')
