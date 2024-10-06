@@ -29,7 +29,6 @@ class UserRequest(BaseModel):
     hashed_password: str = Field(min_length=8, max_length=255, description="Password must be between 8 and 255 characters")
     role: str = Field(description="Role must be one of the following: 'Admin', 'User', or 'Teacher'")
 
-
     class Config:
         json_schema_extra = {
             "example": {
