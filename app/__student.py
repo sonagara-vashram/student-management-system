@@ -1,7 +1,7 @@
 from typing import Annotated
 from sqlalchemy.orm import Session
 from fastapi import FastAPI, Depends, HTTPException, Path
-from models import Students
+from models import Students, Users
 from starlette import status
 from database import SessionLocal
 from schema import StudentRequest
@@ -23,13 +23,16 @@ async def read_all(db: db_dependency):
 
 @app.post("/student", status_code=status.HTTP_201_CREATED)
 async def create_student(db: db_dependency, std_request: StudentRequest):
-    std_model = Students(**std_request.dict())
-    if not std_model:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unexpected error occurred.")
-    db.add(std_model)
-    db.commit()
-    db.refresh(std_model)
-    return std_model
+    user = db.query(Users).filter(Users.users_id == std_request.user_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid User ID.")
+    
+    role = std_request.role
+    
+    # db.add(std_model)
+    # db.commit()
+    # db.refresh(std_model)
+    # return std_model
     
 @app.get("/student/{student_id}", status_code=status.HTTP_200_OK)
 async def read_students(db: db_dependency, student_id: int = Path(gt=0)):
