@@ -42,7 +42,7 @@ async def create_user(db: db_dependency, user_request: UserRequest):
     role = is_valid_role(role)
     
     user_model = Users(
-        admin_id_=admin.admins_id,  
+        admin_id=admin.admins_id,  
         username=user_request.username,
         email=user_request.email,
         hashed_password=user_request.hashed_password,
@@ -55,7 +55,7 @@ async def create_user(db: db_dependency, user_request: UserRequest):
     return user_model
 
 @app.get("/user/{user_id}", status_code=status.HTTP_200_OK)
-async def read_user(db: db_dependency, user_id: int = Path(gt=0)):
+async def read_user(db: db_dependency, user_id: UUID):
     user_model = db.query(Users).filter(Users.users_id == user_id).first()
     if user_model is not None:
         return user_model
@@ -76,7 +76,7 @@ async def update_user(db: db_dependency, user_request: UserRequest, user_id: UUI
     role = user_request.role
     roles = is_valid_role(role)
 
-    user_model.admin_id_ = admin.admins_id 
+    user_model.admin_id = admin.admins_id 
     user_model.username = user_request.username
     user_model.email = user_request.email
     user_model.hashed_password = user_request.hashed_password
