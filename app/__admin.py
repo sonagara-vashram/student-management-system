@@ -22,13 +22,13 @@ db_dependency = Annotated[Session, Depends(get_db)]
 async def read_all(db: db_dependency):
     return db.query(Admins).all()
 
-# @app.post("/admin", status_code=status.HTTP_201_CREATED)
-# async def create_admin(db: db_dependency, admin_request: AdminRequest):
-#     admin_model = Admins(**admin_request.model_dump())
-#     db.add(admin_model)
-#     db.commit()
-#     db.refresh(admin_model)
-#     return admin_model
+@app.post("/admin", status_code=status.HTTP_201_CREATED)
+async def create_admin(db: db_dependency, admin_request: AdminRequest):
+    admin_model = Admins(**admin_request.model_dump())
+    db.add(admin_model)
+    db.commit()
+    db.refresh(admin_model)
+    return admin_model
 
 @app.get("/admin/{admin_id}", status_code=status.HTTP_200_OK)
 async def read_admins(db: db_dependency, admin_id: UUID):
