@@ -28,7 +28,6 @@ class UserRequest(BaseModel):
     email: EmailStr = Field(description="Valid email address")
     hashed_password: str = Field(min_length=8, max_length=255, description="Password must be between 8 and 255 characters")
     role: str = Field(description="Role must be one of the following: 'Admin', 'User', or 'Teacher'")
-
     class Config:
         json_schema_extra = {
             "example": {
@@ -41,7 +40,7 @@ class UserRequest(BaseModel):
         }
         
 class StudentRequest(BaseModel):
-    user_id_: UUID  # Add user_id_ field
+    user_id: UUID  # Add user_id_ field
     first_name: str = Field(min_length=2, max_length=50, description="First name must be between 2 and 50 characters")
     last_name: str = Field(min_length=2, max_length=50, description="Last name must be between 2 and 50 characters")
     dob: date = Field(description="Date of birth in YYYY-MM-DD format")
