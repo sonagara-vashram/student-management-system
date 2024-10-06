@@ -109,7 +109,7 @@ class TeacherRequest(BaseModel):
     last_name: str = Field(min_length=2, max_length=50, description="Last name must be between 2 and 50 characters")
     email: EmailStr = Field(description="Valid email address")
     phone: str = Field(min_length=10, max_length=15, description="Phone number must be between 10 and 15 characters")
-
+    
     class Config:
         json_schema_extra = {
             "example": {
