@@ -1,5 +1,6 @@
 import enum
 from typing import Annotated
+from uuid import UUID
 from sqlalchemy.orm import Session
 from fastapi import FastAPI, Depends, HTTPException, Path
 from models import Users, Admins, RoleEnum
@@ -18,9 +19,8 @@ def get_db():
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
-
-def is_valid_role(role: RoleEnum):
-    formatted_role = role.value.lower()     
+def is_valid_role(role):
+    formatted_role = role.lower()     
     for roles in RoleEnum:
         if roles.value == formatted_role:
             return roles.name 
@@ -62,7 +62,7 @@ async def read_user(db: db_dependency, user_id: int = Path(gt=0)):
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User not found.')
 
 @app.put("/user/{user_id}")
-async def update_user(db: db_dependency, user_request: UserRequest, user_id: int = Path(gt=0)):
+async def update_user(db: db_dependency, user_request: UserRequest, user_id: UUID):
     user_model = db.query(Users).filter(Users.users_id == user_id).first()
     if user_model is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User not found.')
@@ -74,21 +74,21 @@ async def update_user(db: db_dependency, user_request: UserRequest, user_id: int
 
     # Ensure the role matches the RoleEnum values
     role = user_request.role
-    if role not in RoleEnum._value2member_map_:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid role value")
+    roles = is_valid_role(role)
 
     user_model.admin_id_ = admin.admins_id 
     user_model.username = user_request.username
     user_model.email = user_request.email
     user_model.hashed_password = user_request.hashed_password
-    user_model.role = role
+    user_model.role = roles
 
     db.add(user_model)
     db.commit()
+    db.refresh(user_model)
     return {'detail': 'User updated successfully.'}
 
 @app.delete("/user/{user_id}", status_code=status.HTTP_200_OK)
-async def delete_user(db: db_dependency, user_id: int = Path(gt=0)):
+async def delete_user(db: db_dependency, user_id: UUID):
     user_model = db.query(Users).filter(Users.users_id == user_id).first()
     if user_model is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User not found.')
