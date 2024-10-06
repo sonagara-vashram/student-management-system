@@ -40,7 +40,7 @@ class UserRequest(BaseModel):
         }
         
 class StudentRequest(BaseModel):
-    user_id: UUID  # Add user_id_ field
+    user_id: UUID
     first_name: str = Field(min_length=2, max_length=50, description="First name must be between 2 and 50 characters")
     last_name: str = Field(min_length=2, max_length=50, description="Last name must be between 2 and 50 characters")
     dob: date = Field(description="Date of birth in YYYY-MM-DD format")
@@ -48,11 +48,10 @@ class StudentRequest(BaseModel):
     email: EmailStr = Field(description="Valid email address")
     phone: str = Field(min_length=10, max_length=15, description="Phone number must be between 10 and 15 characters")
     address: str = Field(max_length=255, description="Address must be up to 255 characters")
-
     class Config:
         json_schema_extra = {
             "example": {
-                "user_id_": "d4a1a0b1-114c-4268-9e67-091af22dbc16",  # Example UUID
+                "user_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16",  
                 "first_name": "John",
                 "last_name": "Doe",
                 "dob": "2000-01-01",
@@ -104,23 +103,20 @@ class AttendanceRequest(BaseModel):
             }
         }
         
-#! pending..!
 class TeacherRequest(BaseModel):
-    user_id_: UUID
+    user_id: UUID
     first_name: str = Field(min_length=2, max_length=50, description="First name must be between 2 and 50 characters")
     last_name: str = Field(min_length=2, max_length=50, description="Last name must be between 2 and 50 characters")
     email: EmailStr = Field(description="Valid email address")
     phone: str = Field(min_length=10, max_length=15, description="Phone number must be between 10 and 15 characters")
-    department: str = Field(min_length=2, max_length=100, description="Department must be between 2 and 100 characters")
 
     class Config:
         json_schema_extra = {
             "example": {
-                "user_id_": "d4a1a0b1-114c-4268-9e67-091af22dbc16",  # Example UUID
+                "user_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16",  # Example UUID
                 "first_name": "John",
                 "last_name": "Doe",
                 "email": "john.doe@example.com",
                 "phone": "1234567890",
-                "department": "Computer"
             }
         }
