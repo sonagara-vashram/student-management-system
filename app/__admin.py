@@ -1,5 +1,5 @@
 from typing import Annotated
-import uuid
+from uuid import UUID
 from sqlalchemy.orm import Session
 from fastapi import FastAPI, Depends, HTTPException, Path
 from models import Admins
@@ -22,23 +22,23 @@ db_dependency = Annotated[Session, Depends(get_db)]
 async def read_all(db: db_dependency):
     return db.query(Admins).all()
 
-@app.post("/admin", status_code=status.HTTP_201_CREATED)
-async def create_admin(db: db_dependency, admin_request: AdminRequest):
-    admin_model = Admins(**admin_request.model_dump())
-    db.add(admin_model)
-    db.commit()
-    db.refresh(admin_model)
-    return admin_model
+# @app.post("/admin", status_code=status.HTTP_201_CREATED)
+# async def create_admin(db: db_dependency, admin_request: AdminRequest):
+#     admin_model = Admins(**admin_request.model_dump())
+#     db.add(admin_model)
+#     db.commit()
+#     db.refresh(admin_model)
+#     return admin_model
 
 @app.get("/admin/{admin_id}", status_code=status.HTTP_200_OK)
-async def read_admins(db: db_dependency, admin_id: uuid.UUID = Path(...)):
+async def read_admins(db: db_dependency, admin_id: UUID):
     admin_model = db.query(Admins).filter(Admins.admins_id == admin_id).first()
     if admin_model is not None:
         return admin_model
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Admin not found.')
 
 @app.put("/admin/{admin_id}")
-async def update_admin(db: db_dependency, admin_request: AdminRequest, admin_id: uuid.UUID = Path(...)):
+async def update_admin(db: db_dependency, admin_request: AdminRequest, admin_id: UUID):
     admin_model = db.query(Admins).filter(Admins.admins_id == admin_id).first()
     if admin_model is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Admin not found.')
