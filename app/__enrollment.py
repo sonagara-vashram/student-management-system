@@ -1,4 +1,5 @@
 from typing import Annotated
+from uuid import UUID
 from sqlalchemy.orm import Session
 from fastapi import FastAPI, Depends, HTTPException, Path
 from models import Enrollments, Students, Courses
@@ -23,14 +24,18 @@ async def read_all(db: db_dependency):
 
 @app.post("/enrollment", status_code=status.HTTP_201_CREATED)
 async def create_enrollment(db: db_dependency, enrollment_request: EnrollmentRequest):
-    student = db.query(Students).filter(Students.students_id == enrollment_request.student_id_).first()
+    student = db.query(Students).filter(Students.students_id == enrollment_request.student_id).first()
     if not student:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid student ID")
     
-    course = db.query(Courses).filter(Courses.courses_id == enrollment_request.course_id_).first()
+    course = db.query(Courses).filter(Courses.courses_id == enrollment_request.course_id).first()
     if not course:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid course ID")
     
+    existing_student = db.query(Enrollments).filter(Enrollments.student_id == enrollment_request.student_id).first()
+    if existing_student:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Student already enrolled in a course.")
+        
     enrollment_model = Enrollments(**enrollment_request.model_dump())
     db.add(enrollment_model)
     db.commit()
@@ -38,20 +43,20 @@ async def create_enrollment(db: db_dependency, enrollment_request: EnrollmentReq
     return enrollment_model
     
 @app.get("/enrollment/{enrollment_id}", status_code=status.HTTP_200_OK)
-async def read_enrollment(db: db_dependency, enrollment_id: int = Path(gt=0)):
+async def read_enrollment(db: db_dependency, enrollment_id: UUID):
     enrollment_model = db.query(Enrollments).filter(Enrollments.enrollments_id == enrollment_id).first()
     if enrollment_model is not None:
         return enrollment_model
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Enrollment not found.')
 
 @app.put("/enrollment/{enrollment_id}")
-async def update_enrollment(db: db_dependency, enrollment_request: EnrollmentRequest, enrollment_id: int = Path(gt=0)):
+async def update_enrollment(db: db_dependency, enrollment_request: EnrollmentRequest, enrollment_id: UUID):
     enrollment_model = db.query(Enrollments).filter(Enrollments.enrollments_id == enrollment_id).first()
     if enrollment_model is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Enrollment not found.')
 
-    enrollment_model.student_id_ = enrollment_request.student_id_
-    enrollment_model.course_id_ = enrollment_request.course_id_
+    enrollment_model.student_id = enrollment_request.student_id
+    enrollment_model.course_id = enrollment_request.course_id
     
     db.add(enrollment_model)
     db.commit()
@@ -59,7 +64,7 @@ async def update_enrollment(db: db_dependency, enrollment_request: EnrollmentReq
     return enrollment_model
     
 @app.delete("/enrollment/{enrollment_id}", status_code=status.HTTP_200_OK)
-async def delete_enrollment(db: db_dependency, enrollment_id: int = Path(gt=0)):
+async def delete_enrollment(db: db_dependency, enrollment_id: UUID):
     enrollment_model = db.query(Enrollments).filter(Enrollments.enrollments_id == enrollment_id).first()
     if enrollment_model is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Enrollment not found.')
