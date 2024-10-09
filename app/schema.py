@@ -83,8 +83,6 @@ class ParentsRequest(BaseModel):
                 "relation": "Father"
             }
         }    
-
-
 class CourseRequest(BaseModel):
     name: str = Field(min_length=2, max_length=50, description="Name must be between 2 and 50 characters")
     description: str = Field(min_length=2, max_length=255, description="Description must be between 2 and 255 characters")
@@ -96,18 +94,20 @@ class CourseRequest(BaseModel):
                 "description": "Introduction to mathematics"
             }
         }
-        
+
 class EnrollmentRequest(BaseModel):
-    student_id_: UUID
-    course_id_: UUID
+    student_id: UUID
+    course_id: UUID
     
     class Config:
         json_schema_extra = {
             "example": {
-                "student_id_": "d4a1a0b1-114c-4268-9e67-091af22dbc16", 
-                "course_id_": "d4a1a0b1-114c-4268-9e67-091af22dbc16", 
+                "student_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16", 
+                "course_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16", 
             }
         }
+
+        
         
 class TeacherRequest(BaseModel):
     user_id: UUID
@@ -127,6 +127,36 @@ class TeacherRequest(BaseModel):
             }
         }
         
+class ClassRequest(BaseModel):
+    name: str = Field(min_length=2, max_length=50, description="First name must be between 2 and 50 characters")
+    teacher_id: UUID
+    course_id: UUID
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "name": "101",
+                "teacher_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16",
+                "course_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16"
+            }
+        }
+        
+class SubjectRequest(BaseModel):
+    name: str = Field(min_length=2, max_length=50, description="Name must be between 2 and 50 characters")
+    description: str = Field(min_length=2, max_length=255, description="Description must be between 2 and 255 characters")
+    course_id: UUID
+    teacher_id: UUID
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "name": "Math",
+                "description": "Introduction to mathematics",
+                "course_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16",
+                "teacher_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16"
+            }
+        }
+    
 #! pending..!
 class AttendanceRequest(BaseModel):
     student_id_: UUID
