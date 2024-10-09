@@ -1,5 +1,5 @@
 from typing import Annotated
-import uuid
+from uuid import UUID
 from sqlalchemy.orm import Session
 from fastapi import FastAPI, Depends, HTTPException, Path
 from models import Courses
@@ -31,14 +31,14 @@ async def create_course(db: db_dependency, course_request: CourseRequest):
     return course_model
     
 @app.get("/course/{course_id}", status_code=status.HTTP_200_OK)
-async def read_courses(db: db_dependency, course_id: uuid.UUID = Path(...)):
+async def read_courses(db: db_dependency, course_id: UUID):
     course_model = db.query(Courses).filter(Courses.courses_id == course_id).first()
     if course_model is not None:
         return course_model
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Course not found.')
 
 @app.put("/course/{course_id}")
-async def update_course(db: db_dependency, course_request: CourseRequest, course_id: uuid.UUID = Path(...)):
+async def update_course(db: db_dependency, course_request: CourseRequest, course_id: UUID):
     course_model = db.query(Courses).filter(Courses.courses_id == course_id).first()
     if course_model is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Course not found.')
@@ -52,7 +52,7 @@ async def update_course(db: db_dependency, course_request: CourseRequest, course
     return course_model
     
 @app.delete("/course/{course_id}", status_code=status.HTTP_200_OK)
-async def delete_course(db: db_dependency, course_id: uuid.UUID = Path(...)):
+async def delete_course(db: db_dependency, course_id: UUID):
     course_model = db.query(Courses).filter(Courses.courses_id == course_id).first()
     if course_model is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Course not found.')
