@@ -1,11 +1,5 @@
-from typing import Annotated
 from uuid import UUID
-from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, HTTPException, Path
 from pydantic import BaseModel, Field, EmailStr
-from starlette import status
-from models import RoleEnum
-from database import SessionLocal
 from datetime import date, datetime
 
 class AdminRequest(BaseModel):
@@ -154,6 +148,18 @@ class SubjectRequest(BaseModel):
                 "description": "Introduction to mathematics",
                 "course_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16",
                 "teacher_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16"
+            }
+        }
+    
+class NotificationRequest(BaseModel):
+    user_id: UUID
+    message: str = Field(min_length=2, max_length=255, description="Message must be between 2 and 255 characters")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "user_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16", 
+                "message": "message!"
             }
         }
     
