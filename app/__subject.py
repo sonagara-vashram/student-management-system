@@ -1,8 +1,8 @@
 from typing import Annotated
 from uuid import UUID
 from sqlalchemy.orm import Session
-from fastapi import FastAPI, Depends, HTTPException, Path
-from models import Subjects, Students, Courses, Teachers
+from fastapi import FastAPI, Depends, HTTPException
+from models import Subjects, Courses, Teachers
 from starlette import status
 from database import SessionLocal
 from schema import SubjectRequest

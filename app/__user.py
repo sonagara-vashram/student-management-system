@@ -1,8 +1,7 @@
-import enum
 from typing import Annotated
 from uuid import UUID
 from sqlalchemy.orm import Session
-from fastapi import FastAPI, Depends, HTTPException, Path
+from fastapi import FastAPI, Depends, HTTPException
 from models import Users, Admins, RoleEnum
 from schema import UserRequest
 from starlette import status

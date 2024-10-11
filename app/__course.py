@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 from sqlalchemy.orm import Session
-from fastapi import FastAPI, Depends, HTTPException, Path
+from fastapi import FastAPI, Depends, HTTPException
 from models import Courses
 from starlette import status
 from database import SessionLocal
