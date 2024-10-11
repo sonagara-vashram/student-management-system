@@ -179,3 +179,19 @@ class AttendanceRequest(BaseModel):
                 "status": "present", 
             }
         }
+        
+class FeeRequest(BaseModel):
+    student_id: UUID
+    amount: float = Field(gt=0, description="Amount must be greater than 0")
+    status: str = Field(min_length=2, max_length=10, description="Status must be between 2 and 10 characters")
+    due_date: str = Field(min_length=2, max_length=10, description="Due date in YYYY-MM-DD format")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "student_id": "d4a1a0b1-114c-4268-9e67-091af22dbc16",
+                "amount": 100.0,
+                "status": "pending",
+                "due_date": "2022-01-31",
+            }
+        }
